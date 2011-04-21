@@ -14,9 +14,9 @@
 		return [foo, bar];
 	};
 	
-	test(    ); // 100, 100
-	test(  42); //  42, 100
-	test(1, 2); //   1,   2
+	test(      ); // 100, 100
+	test(15    ); //  15, 100
+	test( 1, 42); //   1,  42
 
 #### Default values with required arguments
 
