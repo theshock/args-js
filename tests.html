@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
-		<link href="lib/qunit.css" rel="stylesheet" />
-		<script src="lib/jquery.js"></script>
-		<script src="lib/qunit.js"></script>
-		<script src="../args.js"></script>
+		<link href="tests-lib/qunit.css" rel="stylesheet" />
+		<script src="tests-lib/jquery.js"></script>
+		<script src="tests-lib/qunit.js"></script>
+		<script src="args.js"></script>
 	</head>
 	<body>
 		<h1 id="qunit-header">Atom Javascript framework tests</h1>
@@ -42,10 +42,10 @@
 		
 		var listener = function () { alert(1) };
 		
-		deepEqual(onkeypress( 'enter', listener ), ['enter', listener], 'Two arguments');
-		deepEqual(onkeypress(          listener ), [  null , listener], 'Only second arguments');
+		deepEqual(run( 'enter', listener ), ['enter', listener], 'Two arguments');
+		deepEqual(run(          listener ), [  null , listener], 'Only second arguments');
 		raises(function () {
-			onkeypress(); // Error: 1 args required, 0 given
+			run(); // Error: 1 args required, 0 given
 		}, 'Required argument is empty');
 	});
 	
@@ -59,12 +59,11 @@
 		
 		ok(run(1,2,3), 'All arguments presents');
 		raises(function () {
-			test(1,2  ); // Error: 3 args required, 2 given
+			run(1,2  ); // Error: 3 args required, 2 given
 		}, 'not enought arguments');
 	});
 	
 	test('Type casting', function () {
-		expect(2);
 		
 		var run = function (foo, bar) {
 			Args(arguments).cast(String, parseInt);
@@ -73,7 +72,23 @@
 			strictEqual(bar,  256 , 'Hex string parsed as int');
 		}
 	
-		addEvent(123, '0x100');
+		run(123, '0x100');
+	});
+	
+	test('Type Hinting', function () {
+		
+		var Foo = function(){};
+		var Bar = function(){};
+		
+		var run = function (foo, bar) {
+			Args(arguments).hinting(Foo, Bar);
+			return true;
+		};
+		
+		ok(run(new Foo(), new Bar()), 'Type hinting successful'); // Success
+		raises(function () {
+			run(1,2); // Error
+		}, 'Wrong types in type hinting');
 	});
 	</script>
 </html>
