@@ -63,5 +63,17 @@
 		}, 'not enought arguments');
 	});
 	
+	test('Type casting', function () {
+		expect(2);
+		
+		var run = function (foo, bar) {
+			Args(arguments).cast(String, parseInt);
+			
+			strictEqual(foo, '123', 'Number becames a string');
+			strictEqual(bar,  256 , 'Hex string parsed as int');
+		}
+	
+		addEvent(123, '0x100');
+	});
 	</script>
 </html>
