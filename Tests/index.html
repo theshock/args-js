@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link href="lib/qunit.css" rel="stylesheet" />
+		<script src="lib/jquery.js"></script>
+		<script src="lib/qunit.js"></script>
+		<script src="../args.js"></script>
+	</head>
+	<body>
+		<h1 id="qunit-header">Atom Javascript framework tests</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<ol id="qunit-tests"></ol>
+		<div id="qunit-fixture"></div>
+	</body>
+	<!-- Tests -->
+	<script>
+	module('Args.js');
+	
+	test('Default values', function () {
+		
+		var run = function (foo, bar) {
+			Args(arguments).defaults(1, 2);
+			
+			return [foo, bar];
+		};
+		
+		deepEqual(run(    ), [1, 2], 'Zero arguments');
+		deepEqual(run(3   ), [3, 2], 'One  argument ');
+		deepEqual(run(3, 4), [3, 4], 'Two  arguments');
+	});
+	
+	test('Default values + required', function () {
+		
+		var run = function (keyname, fn) {
+			Args(arguments).defaults(null, Args.required);
+			return [keyname, fn];
+		}
+		
+		var listener = function () { alert(1) };
+		
+		deepEqual(onkeypress( 'enter', listener ), ['enter', listener], 'Two arguments');
+		deepEqual(onkeypress(          listener ), [  null , listener], 'Only second arguments');
+		raises(function () {
+			onkeypress(); // Error: 1 args required, 0 given
+		}, 'Required argument is empty');
+	});
+	
+	test('All arguments required', function () {
+		
+		var run = function (foo, bar, qux) {
+			Args(arguments).allRequired();
+			
+			return true;
+		}
+		
+		ok(run(1,2,3), 'All arguments presents');
+		raises(function () {
+			test(1,2  ); // Error: 3 args required, 2 given
+		}, 'not enought arguments');
+	});
+	
+	</script>
+</html>
